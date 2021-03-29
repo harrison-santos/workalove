@@ -62,7 +62,7 @@ urlpatterns = [
         "docs",
         TemplateView.as_view(
             template_name="redoc.html",
-            extra_content={"schema_url": "docs/api.yaml"}
+            extra_context={"schema_url": "docs/api.yaml"}
         ),
         name="api_docs"
     )
