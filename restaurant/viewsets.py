@@ -164,8 +164,10 @@ class RecipeViewSet(viewsets.ViewSet):
         return Response(obj, status=200)
 
     def list(self, request):
+        import pdb; pdb.set_trace()
         query_chef = request.query_params.get("chef", "")
         query_title = request.query_params.get("recipe", "")
+        queryset = Recipe.objects.all()
 
         try:
             if query_chef != "":
@@ -176,6 +178,7 @@ class RecipeViewSet(viewsets.ViewSet):
                 queryset = Recipe.objects.filter(
                     title__icontains=query_title
                 )
+            
             queryset = queryset.select_related("chef").values("cd_recipe", "title", "chef_id", "chef__name")
         
         except KeyError:
