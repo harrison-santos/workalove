@@ -164,7 +164,6 @@ class RecipeViewSet(viewsets.ViewSet):
         return Response(obj, status=200)
 
     def list(self, request):
-        import pdb; pdb.set_trace()
         query_chef = request.query_params.get("chef", "")
         query_title = request.query_params.get("recipe", "")
         queryset = Recipe.objects.all()
