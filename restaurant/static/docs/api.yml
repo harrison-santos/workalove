@@ -1,0 +1,362 @@
+swagger: "2.0"
+info:
+  description: "An API that is focused on mapping routes for use by Chefs and their specific customers"
+  version: "1.0.0"
+  title: "Restaraunt API"
+host: "workalove.herokuapp.com"
+basePath: "/api"
+tags:
+- name: "chef"
+  description: "Chef routes"
+- name: "recipe"
+  description: "Recipe routes"
+- name: "ingredient"
+  description: "Ingredient routes"
+- name: "foodpreparation"
+  description: "Food Preparation routes"
+schemes:
+- "https"
+- "http"
+
+paths:
+  /chef:
+    get:
+      tags:
+        - "chef"
+        
+      summary: List chefs
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: '#/definitions/Chef'
+ 
+ 
+  /chef/{cd_chef}:
+    get:
+      tags:
+        - "chef"
+      summary: Get chef
+      parameters:
+        - name: "cd_chef"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: '#/definitions/ChefModel'
+    
+  
+
+  /recipe:
+    get:
+        tags:
+          - "recipe"
+          
+        summary: List resumed recipes
+        responses:
+          "200":
+            description: Sucesso
+            schema:
+              $ref: '#/definitions/ResumedRecipe'
+    
+  
+  /recipe/{cd_recipe}:
+    get:
+      tags:
+        - "recipe"
+        
+      summary: Get specific recipe
+      parameters:
+        - name: "cd_recipe"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: '#/definitions/ResumedRecipe'
+            
+    delete:
+      tags:
+        - "recipe"
+      summary: Delete a recipe
+      parameters:
+        - name: "cd_recipe"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+      responses:
+        "204":
+          description: Delete
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Recipe has been deleted"
+  
+  
+  
+  /chef/{cd_chef}/recipe:
+    get:
+      tags:
+        - "recipe"
+      summary: Get chef's recipes
+      parameters:
+        - name: "cd_chef"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            $ref: '#/definitions/Recipe'
+    
+    post:
+      tags:
+          - "recipe"
+      summary: Create recipe
+      parameters:
+        - in: "path"
+          name: "cd_chef"
+          description: "UUID"
+          required: True
+          type: string
+  
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateRecipe"
+      responses:
+        201:
+          description: Sucesso
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Recipe has been created"
+            
+
+              
+  
+      
+  /ingredient:
+    get:
+      tags:
+        - "ingredient"
+      summary: List Ingredients
+      responses:
+        "200":
+          description: Sucesso
+          schema:
+            type: array
+            items: {}
+            example:
+              - description: "Ovos"
+              - description: "Margarina"
+              - description: "Leite"
+      
+  /chef/{cd_chef}/recipe/{cd_recipe}/ingredient:
+    post:
+      tags:
+        - "ingredient"
+      summary: Get chef's recipes
+      parameters:
+        - name: "cd_chef"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+        - name: "cd_recipe"
+          in: "path"
+          description: "UUID"
+          required: True
+          type: string
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            properties:
+              ingredient:
+                type: object
+                $ref: '#/definitions/Ingredient'
+      responses:
+        "201":
+          description: Sucesso
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Ingredients has been added to the recipe"
+      
+        "404":
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message: 
+                type: string
+                example: "Chef or recipe not found"
+            
+  /chef/{cd_chef}/recipe/{cd_recipe}/foodpreparation:
+      post:
+        tags:
+          - "foodpreparation"
+        summary: Get chef's recipes
+        parameters:
+          - name: "cd_chef"
+            in: "path"
+            description: "UUID"
+            required: True
+            type: string
+          - name: "cd_recipe"
+            in: "path"
+            description: "UUID"
+            required: True
+            type: string
+          - in: "body"
+            name: "body"
+            required: true
+            schema:
+              properties:
+                food_preparation:
+                  type: object
+                  $ref: '#/definitions/FoodPreparation'
+        responses:
+          "201":
+            description: Sucesso
+            schema:
+              type: object
+              properties:
+                message: 
+                  type: string
+                  example: "Food preparation has been added to the recipe"
+        
+          "404":
+            description: Not Found
+            schema:
+              type: object
+              properties:
+                message: 
+                  type: string
+                  example: "Chef or recipe not found"
+              
+
+
+definitions:
+  Chef:
+    type: array
+    items:
+      $ref: '#/definitions/ChefModel'
+    example:
+      - cd_chef: "e5f1144a-f6df-4041-a4d4-4433485ca813"
+        name: "Harrison"
+      - cd_chef: "ca735f56-9790-4235-a93d-b5db4ad390f2"
+        name: "Rodrigo"
+    
+
+  ChefModel:
+    type: object
+    properties:
+      cd_chef:
+        type: string
+        example: "e5f1144a-f6df-4041-a4d4-4433485ca813"
+      name:
+        type: string
+        example: "Harrison"
+     
+    
+  ResumedRecipe:
+    type: object
+    properties:
+      cd_recipe:
+        type: string
+        example: "e5f1144a-f6df-4041-a4d4-4433485ca813"
+      title:
+        type: string
+        example: "Bolo de Ovos"
+      chef:
+        type: string  
+        example: "Harrison"
+        
+    
+  CreateRecipe:
+    type: object
+    properties:
+      title:
+        type: string
+        example: "Bolo de Ovos"
+
+
+  Recipe:
+    type: object
+    properties:
+      cd_recipe:
+        type: string
+        example: "e5f1144a-f6df-4041-a4d4-4433485ca813"
+      title:
+        type: string
+        example: "Bolo de Ovos"
+      chef:
+        type: string  
+        example: "Harrison"
+        
+      ingredient:
+        $ref: '#/definitions/Ingredient'
+
+      food_preparation:
+        $ref: '#/definitions/FoodPreparation'
+
+  Ingredient:
+    type: array
+    items:
+      $ref: '#/definitions/IngredientModel'
+    example:
+      - description: "Ovos"
+        quantity: 3
+      - description: "Leite"
+        quantity: 3
+  
+  IngredientModel:
+    type: object
+    properties:
+      description:
+        type: string
+        example: "Ovos"
+      quantity:
+        type: number
+        example: 3
+        
+        
+  FoodPreparation:
+    type: array
+    items:
+      $ref: '#/definitions/StepModel'
+    example:
+      - step_number: 1
+        step_description: "Bata as claras em neve e reserve."
+      - step_number: 2
+        step_description: "Misture as gemas, a margarina e o açúcar até obter uma massa homogênea."
+    
+
+  StepModel:
+    type: object
+    properties:
+      step_number:
+        type: number
+        example: 1
+      step_description:
+        type: number
+        example: 2
