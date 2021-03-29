@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework import routers
 from restaurant.viewsets import RecipeViewSet, ChefViewSet, IngredientViewSet
+from django.views.generic import TemplateView
 
 """router = routers.DefaultRouter()
 router.register(r'chef', ChefViewSet)
@@ -56,5 +57,13 @@ urlpatterns = [
     ),
     re_path(rf"^api/chef/(?P<cd_chef>{re_guide})/recipe/(?P<cd_recipe>{re_guide})/foodpreparation$",
         ChefViewSet.as_view({"post": "create_recipe_food_preparation"})
+    )
+    path(
+        "docs",
+        TemplateView.as_view(
+            template_name="redoc.html",
+            extra_content={"schema_url": "docs/api.yaml"}
+        ),
+        name="api_docs"
     )
 ]
