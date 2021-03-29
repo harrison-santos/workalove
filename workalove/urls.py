@@ -57,7 +57,7 @@ urlpatterns = [
     ),
     re_path(rf"^api/chef/(?P<cd_chef>{re_guide})/recipe/(?P<cd_recipe>{re_guide})/foodpreparation$",
         ChefViewSet.as_view({"post": "create_recipe_food_preparation"})
-    )
+    ),
     path(
         "docs",
         TemplateView.as_view(
